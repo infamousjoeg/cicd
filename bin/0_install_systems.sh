@@ -73,6 +73,7 @@ echo "#################################"
 echo "# Setup Conjur Account"
 echo "#################################"
 
+sleep 5
 conjur_admin_api=$(docker-compose exec conjur conjurctl account create ${CONJUR_ACCOUNT})
 conjur_pass=$(echo ${conjur_admin_api}|sed 's/.* //')
 
