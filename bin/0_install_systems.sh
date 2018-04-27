@@ -130,8 +130,9 @@ echo "#################################"
 
 cd downloads
 
-#pip uninstall -y docker
-#pip install docker
+pip uninstall -y docker
+pip uninstall -y docker-py 
+pip install docker-py 
 
 if [ ! -d awx ]; then
   git clone https://github.com/ansible/awx.git
