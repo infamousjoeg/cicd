@@ -131,8 +131,7 @@ echo "#################################"
 cd downloads
 
 pip uninstall -y docker
-
-curl -fsSL get.docker.com | sh
+pip install docker -y 
 
 if [ ! -d awx ]; then
   git clone https://github.com/ansible/awx.git
