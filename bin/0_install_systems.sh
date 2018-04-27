@@ -11,7 +11,7 @@ export JENKINS_ADMIN_PASSWORD=$(openssl rand -hex 12)
 export AWX_PASSWORD=$(openssl rand -hex 12)
 export JENKINS_ADMIN_USER=admin
 export CONJUR_ACCOUNT=demo
-export ADMIN_EMAIL=admin@admin.local
+export ADMIN_EMAIL='admin@admin.local'
 
 
 rm -rf ./workspace
@@ -89,7 +89,7 @@ if [ ! -d downloads ]; then
 
     curl -o ./downloads/apache-maven-3.5.3-bin.tar.gz http://apache.communilink.net/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
 
-    curl -L -o downloads/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 chmod +x downloads/jq
+    curl -L -o downloads/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x downloads/jq
 
 fi
 
