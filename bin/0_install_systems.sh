@@ -137,6 +137,8 @@ if [ ! -d awx ]; then
   git clone https://github.com/ansible/awx.git
 fi
 
+pip uninstall docker-py -y 
+
 cd ./awx/installer
 sed -i "s,host_port=80,host_port=34080,g" ./inventory
 sed -i "s,.*default_admin_password=.*,default_admin_password=${AWX_PASSWORD},g" ./inventory
