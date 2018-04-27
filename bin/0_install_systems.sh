@@ -131,13 +131,12 @@ echo "#################################"
 cd downloads
 
 pip uninstall -y docker
-pip install docker==2.6.1
+
+curl -fsSL get.docker.com | sh
 
 if [ ! -d awx ]; then
   git clone https://github.com/ansible/awx.git
 fi
-
-pip uninstall docker-py -y 
 
 cd ./awx/installer
 sed -i "s,host_port=80,host_port=34080,g" ./inventory
