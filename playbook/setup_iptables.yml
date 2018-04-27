@@ -5,7 +5,7 @@
 
   - name: accept weavescope port 4040
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 4040
@@ -14,7 +14,7 @@
 
   - name: accept conjur port 8080
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 8080
@@ -23,7 +23,7 @@
 
   - name: accept gitlab port 31080
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 31080
@@ -31,7 +31,7 @@
       jump: ACCEPT
   - name: accept gitlab port 31443
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 31443
@@ -39,7 +39,7 @@
       jump: ACCEPT
   - name: accept gitlab port 31022
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 31022
@@ -48,7 +48,7 @@
 
   - name: accept jenkins port 32080 
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 32080
@@ -56,7 +56,7 @@
       jump: ACCEPT
   - name: accept jenkins port 32000
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 32000
@@ -65,7 +65,7 @@
 
   - name: accept artifactory port 33081
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 33081
@@ -73,7 +73,7 @@
       jump: ACCEPT
   - name: accept artifactory port 33080
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 33080
@@ -83,7 +83,7 @@
 
   - name: accept securedemo 8099
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 8099
@@ -93,7 +93,7 @@
 
   - name: accept insecuredemo 8091
     iptables:
-      chain: IN_public_allow
+      chain: INPUT
       source: 0.0.0.0/0
       ctstate: NEW,ESTABLISHED
       destination_port: 8091
