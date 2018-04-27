@@ -56,9 +56,9 @@ echo "#################################"
 echo "# Deploy Containers"
 echo "#################################"
 
-SERVER_IP=${server_ip} \
-GITLAB_ROOT_PASSWORD=${gitlab_root_password} \
-GITLAB_ROOT_EMAIL=${admin_email} \
+SERVER_IP=${SERVER_IP} \
+GITLAB_ROOT_PASSWORD=${GITLAB_ROOT_PASSWORD} \
+GITLAB_ROOT_EMAIL=${ADMIN_EMAIL} \
 docker-compose up -d
 
 
@@ -73,7 +73,7 @@ echo "#################################"
 echo "# Setup Conjur Account"
 echo "#################################"
 
-conjur_admin_api=$(docker-compose exec conjur conjurctl account create ${conjur_account})
+conjur_admin_api=$(docker-compose exec conjur conjurctl account create ${CONJUR_ACCOUNT})
 conjur_pass=$(echo ${conjur_admin_api}|sed 's/.* //')
 
 echo "#################################"
@@ -101,13 +101,13 @@ docker cp ./jenkins/plugins.txt cicd_jenkins:/tmp/plugins.txt
 docker exec cicd_jenkins sh -c 'xargs /usr/local/bin/install-plugins.sh < /tmp/plugins.txt' || true
 
 theScript=`cat ./jenkins/java.groovy`
-curl -d "script=${theScript}" http://${server_ip}:32080/scriptText
+curl -d "script=${theScript}" http://${SERVER_IP}:32080/scriptText
 
 theScript=`cat ./jenkins/maven.groovy`
-curl -d "script=${theScript}" http://${server_ip}:32080/scriptText
+curl -d "script=${theScript}" http://${SERVER_IP}:32080/scriptText
 
 theScript=`cat ./jenkins/security.groovy`
-curl -d "script=${theScript//xPASSx/$jenkins_admin_password}" http://${server_ip}:32080/scriptText
+curl -d "script=${theScript//xPASSx/$JENKINS_ADMIN_PASSWORD}" http://${SERVER_IP}:32080/scriptText
 
 docker restart cicd_jenkins
 
@@ -138,7 +138,7 @@ fi
 
 cd ./awx/installer
 sed -i "s,host_port=80,host_port=34080,g" ./inventory
-sed -i "s,.*default_admin_password=.*,default_admin_password=${awx_password},g" ./inventory
+sed -i "s,.*default_admin_password=.*,default_admin_password=${AWX_PASSWORD},g" ./inventory
 sed -i "s,# default_admin_user=admin,default_admin_user=admin,g" ./inventory
 ansible-playbook -i inventory install.yml
 cd ../../..
@@ -166,7 +166,7 @@ docker exec cicd_gitlab chmod +x /tmp/getcitoken.rb
 
 
 # Wait for GITLAB web service
-while [[ "$(curl --write-out %{http_code} --silent --output /dev/null http://gitlab.${server_ip}.xip.io:31080/users/sign_in)" != "200" ]]; do 
+while [[ "$(curl --write-out %{http_code} --silent --output /dev/null http://gitlab.${SERVER_IP}.xip.io:31080/users/sign_in)" != "200" ]]; do 
     printf '.'
     sleep 5
 done
@@ -176,7 +176,7 @@ until [[ -z "$(docker exec cicd_gitlab ruby /tmp/getcitoken.rb | grep 'Error')" 
 CI_SERVER_TOKEN="$(docker exec cicd_gitlab ruby /tmp/getcitoken.rb)"
 
 docker exec cicd_gitlab_runner gitlab-runner register --non-interactive \
-  --url "http://gitlab.${server_ip}.xip.io:31080/" \
+  --url "http://gitlab.${SERVER_IP}.xip.io:31080/" \
   -r "${CI_SERVER_TOKEN}" \
   --executor shell
 
@@ -189,30 +189,30 @@ echo "# Save details to result file"
 echo "#################################"
 
 cat > ./workspace/config << EOL
-SERVER_IP=${server_ip} 
+SERVER_IP=${SERVER_IP} 
 CONJUR_DATA_KEY=${CONJUR_DATA_KEY}
-CONJUR_URL=conjur.${server_ip}.xip.io:8080
+CONJUR_URL=conjur.${SERVER_IP}.xip.io:8080
 CONJUR_USER=admin
 CONJUR_PASS=${conjur_pass}
-CONJUR_ACCOUNT=${conjur_account}
-GITLAB_URL=gitlab.${server_ip}.xip.io:31080
+CONJUR_ACCOUNT=${CONJUR_ACCOUNT}
+GITLAB_URL=gitlab.${SERVER_IP}.xip.io:31080
 GITLAB_USER=root
-GITLAB_PASS=${gitlab_root_password} 
-GITLAB_EMAIL=${admin_email} 
+GITLAB_PASS=${GITLAB_ROOT_PASSWORD} 
+GITLAB_EMAIL=${ADMIN_EMAIL} 
 GITLAB_CI_SERVER_TOKEN=${CI_SERVER_TOKEN}
-JENKINS_URL=jenkins.${server_ip}.xip.io:32080
+JENKINS_URL=jenkins.${SERVER_IP}.xip.io:32080
 JENKINS_USER=admin
-JENKINS_PASS=${jenkins_admin_password}
-ARTIFACTORY_URL=artifactory.${server_ip}.xip.io:33081
+JENKINS_PASS=${JENKINS_ADMIN_PASSWORD}
+ARTIFACTORY_URL=artifactory.${SERVER_IP}.xip.io:33081
 ARTIFACTORY_USER=admin
 ARTIFACTORY_PASS=password
-SONAR_URL=sonar.${server_ip}.xip.io:34000
+SONAR_URL=sonar.${SERVER_IP}.xip.io:34000
 SONAR_USER=admin
 SONAR_PASS=admin
-SCOPE_URL=scope.${server_ip}.xip.io:4040
-AWX_URL=awx.${server_ip}.xip.io:34080
+SCOPE_URL=scope.${SERVER_IP}.xip.io:4040
+AWX_URL=awx.${SERVER_IP}.xip.io:34080
 AWX_USER=admin
-AWX_PASS=${awx_password}
+AWX_PASS=${AWX_PASSWORD}
 DOCKER_SSH_USER=cicd_service_account
 DOCKER_SSH_KEY="${DOCKER_SSH_KEY}"
 
