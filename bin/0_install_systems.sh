@@ -5,13 +5,13 @@
 ####################
 
 
-export server_ip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'|grep -v 172*)
-export gitlab_root_password=$(openssl rand -hex 12)
-export jenkins_admin_password=$(openssl rand -hex 12)
-export awx_password=$(openssl rand -hex 12)
-export jenkins_admin_user=admin
-export conjur_account=demo
-export admin_email=admin@admin.local
+export SERVER_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'|grep -v 172*)
+export GITLAB_ROOT_PASSWORD=$(openssl rand -hex 12)
+export JENKINS_ADMIN_PASSWORD=$(openssl rand -hex 12)
+export AWX_PASSWORD=$(openssl rand -hex 12)
+export JENKINS_ADMIN_USER=admin
+export CONJUR_ACCOUNT=demo
+export ADMIN_EMAIL=admin@admin.local
 
 
 rm -rf ./workspace
