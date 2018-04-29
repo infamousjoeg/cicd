@@ -1,7 +1,8 @@
 - hosts: localhost
   connection: local
+
   roles:
-    - drhelius.docker
+    - role: drhelius.docker
       docker_compose: yes 
       docker_compose_version: 1.21.0
 
