@@ -59,7 +59,7 @@
 		stage(&apos;Checkout Source&apos;) {
 		    steps {
 			sh """
-			summon sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@GITLAB_URL/root/SecureDemo.git .\'
+			summon --yaml 'SECURE_GITLAB_PASS: !var gitlab/password' sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@GITLAB_URL/root/SecureDemo.git .\'
 			"""
 		    }
 		}
@@ -77,7 +77,7 @@
         stage(&apos;Deploy to Artifactory&apos;) {
             steps {
 		sh """
-                summon sh -c \'mvn deploy -DskipTests -Dartifactory_url=http://ARTIFACTORY_USER:\${SECURE_ARTIFACTORY_PASS}@ARTIFACTORY_URL/artifactory/example-repo-local -Dv=\${BUILD_NUMBER}\'
+                summon --yaml 'SECURE_ARTIFACTORY_PASS: !var artifactory/password' sh -c \'mvn deploy -DskipTests -Dartifactory_url=http://ARTIFACTORY_USER:\${SECURE_ARTIFACTORY_PASS}@ARTIFACTORY_URL/artifactory/example-repo-local -Dv=\${BUILD_NUMBER}\'
 		"""
             }
         }
@@ -86,7 +86,7 @@
         stage(&apos;Trigger CD process using Ansible&apos;) {
             steps {
                 sh """
-                  summon sh -c \' \\
+                  summon --yaml 'SECURE_AWX_PASS: !var awx/password' sh -c \' \\
                     curl -k -X POST \\
                         -u "AWX_USER:\$SECURE_AWX_PASS" \\
                         -H "Accept: application/json" \\
