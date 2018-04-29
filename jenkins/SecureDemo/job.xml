@@ -58,8 +58,9 @@
 		}
 		stage(&apos;Checkout Source&apos;) {
 		    steps {
+            def serverIP = InetAddress.localHost.hostAddress
 			sh """
-			summon --yaml \'SECURE_GITLAB_PASS: !var gitlab/password\' sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@gitlab.$SERVER_IP.xip.io:31080/root/SecureDemo.git .\'
+			summon --yaml \'SECURE_GITLAB_PASS: !var gitlab/password\' sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@gitlab.${serverIP}.xip.io:31080/root/SecureDemo.git .\'
 			"""
 		    }
 		}
