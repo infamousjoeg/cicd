@@ -59,7 +59,7 @@
 		stage(&apos;Checkout Source&apos;) {
 		    steps {
 			sh """
-			summon --yaml \'SECURE_GITLAB_PASS: !var gitlab/password\' sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@gitlab.192.168.191.138.xip.io:31080/root/SecureDemo.git .\'
+			summon --yaml \'SECURE_GITLAB_PASS: !var gitlab/password\' sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@gitlab.$SERVER_IP.xip.io:31080/root/SecureDemo.git .\'
 			"""
 		    }
 		}
