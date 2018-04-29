@@ -63,18 +63,9 @@
 			"""
 		    }
 		}
-        stage(&apos;Parallel Tests&apos;) {
+        stage(&apos;Unit Test by JUnit and Cobertura&apos;) {
             steps {
-                parallel(
-                        &apos;Unit Test by JUnit and Cobertura&apos;: {
-                            sh &quot;mvn -U clean test cobertura:cobertura -Dcobertura.report.format=xml&quot;
-                        },
-                        &apos;Quality Check by SonarQube&apos;: {
-                            sh """
-				summon --yaml \'SECURE_SONAR_PASS: !var sonar/password\' sh -c \'mvn sonar:sonar -Dsonar.host.url=http://cicd_sonar:9000 -Dsonar.username=admin -Dsonar.password=\${SECURE_SONAR_PASS} -Dsonar.java.binaries=target/classes\'
-			    """
-                        }
-                )
+                sh &quot;mvn -U clean test cobertura:cobertura -Dcobertura.report.format=xml&quot;
             }
             post {
                 always {

@@ -60,16 +60,9 @@
 		    sh &quot;git clone http://GITLAB_USER:GITLAB_PASS@GITLAB_URL/root/InsecureDemo.git .&quot;
 	    }
 	}
-        stage(&apos;Parallel Tests&apos;) {
+        stage(&apos;Unit Test by JUnit and Cobertura&apos;) {
             steps {
-                parallel(
-                        &apos;Unit Test by JUnit and Cobertura&apos;: {
-                            sh &quot; mvn -U clean test cobertura:cobertura -Dcobertura.report.format=xml&quot; 
-                        },
-                        &apos;Quality Check by SonarQube&apos;: {
-                            sh &quot;mvn sonar:sonar -Dsonar.host.url=http://cicd_sonar:9000 -Dsonar.username=admin -Dsonar.password=admin -Dsonar.java.binaries=target/classes&quot; 
-                        }
-                )
+                sh &quot; mvn -U clean test cobertura:cobertura -Dcobertura.report.format=xml&quot; 
             }
             post {
                 always {
