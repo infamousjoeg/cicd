@@ -58,7 +58,6 @@
 		}
 		stage(&apos;Checkout Source&apos;) {
 		    steps {
-            def serverIP = InetAddress.localHost.hostAddress
 			sh """
 			summon sh -c \'git clone http://root:\$SECURE_GITLAB_PASS@GITLAB_URL/root/SecureDemo.git .\'
 			"""
