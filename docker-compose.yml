@@ -3,12 +3,12 @@ version: "2"
 services:
 
   database:
-    image: postgres:9.3
+    image: localhost:5000/postgres:9.3
     container_name: cicd_database
 
   conjur:
     container_name: cicd_conjur
-    image: cyberark/conjur
+    image: localhost:5000/cyberark/conjur
     command: server
     environment:
       DATABASE_URL: postgres://postgres@database/postgres
@@ -20,7 +20,7 @@ services:
 
   client:
     container_name: cicd_client
-    image: conjurinc/cli5
+    image: localhost:5000/conjurinc/cli5
     depends_on: [ conjur ]
     entrypoint: sleep
     command: infinity
@@ -32,14 +32,14 @@ services:
 
   artifactory:
     container_name: cicd_artifactory
-    image: docker.bintray.io/jfrog/artifactory-oss:5.9.1
+    image: localhost:5000/docker.bintray.io/jfrog/artifactory-oss:5.9.1
     ports:
       - "33081:8081"
       - "33080:80"
 
   jenkins:
     container_name: cicd_jenkins
-    image: jenkins/jenkins:lts
+    image: localhost:5000/jenkins/jenkins:lts
 #    image: jenkinsci/blueocean
     restart: always
     environment:
@@ -52,13 +52,13 @@ services:
 
   sonarqube:
     container_name: cicd_sonar
-    image: sonarqube:lts
+    image: localhost:5000/sonarqube:lts
     ports: 
       - "34000:9000"
 
   gitlab:
     container_name: cicd_gitlab
-    image: 'gitlab/gitlab-ce:latest'
+    image: 'localhost:5000/gitlab/gitlab-ce:latest'
     restart: always
     hostname: gitlab
     environment:
@@ -74,7 +74,7 @@ services:
       - '31022:22'
   gitlab_runner:
     container_name: cicd_gitlab_runner
-    image: 'gitlab/gitlab-runner:latest'
+    image: 'localhost:5000/gitlab/gitlab-runner:latest'
     restart: always
     hostname: gitlab_runner
     environment:
@@ -83,7 +83,7 @@ services:
 
   scope:
     container_name: cicd_scope
-    image: weaveworks/scope:latest
+    image: localhost:5000/weaveworks/scope:latest
     network_mode: "host"
     pid: "host"
     privileged: true

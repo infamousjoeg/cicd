@@ -27,11 +27,11 @@
         dest: "{{ppath.stdout}}/app.war"
 
     - name: Build image
-      shell: "docker build -t cicd/securedemo:latest . -f {{ppath.stdout}}/Dockerfile"
+      shell: "docker build -t localhost:5000/cicd/securedemo:latest . -f {{ppath.stdout}}/Dockerfile"
 
     - name: Start the container
       docker_container:
         name: cicd_SecureDemo
-        image: cicd/securedemo:latest
+        image: localhost:5000/cicd/securedemo:latest
         ports:
           - "8099:8099"

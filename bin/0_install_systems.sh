@@ -5,13 +5,13 @@
 ####################
 
 
-export SERVER_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'|grep -v 172*)
+export SERVER_IP=$(hostname -I | awk '{print $1}')
 export GITLAB_ROOT_PASSWORD=$(openssl rand -hex 12)
 export JENKINS_ADMIN_PASSWORD=$(openssl rand -hex 12)
 export AWX_PASSWORD=$(openssl rand -hex 12)
 export JENKINS_ADMIN_USER=admin
 export CONJUR_ACCOUNT=demo
-export ADMIN_EMAIL='admin@admin.local'
+export ADMIN_EMAIL='mike@cyberarkdemo.com'
 
 
 rm -rf ./workspace
@@ -38,11 +38,20 @@ echo "#################################"
 ansible-playbook ./playbook/setup_docker.yml
 
 echo "#################################"
+echo "# Create Docker Private Registry"
+echo "#################################"
+
+docker run --name cicd_registry -d --restart always -p 5000:5000 -v /opt/docker/registry:/var/lib/registry registry:2
+sleep 5
+docker login -u admin -p admin localhost:5000
+sleep 5
+
+echo "#################################"
 echo "# Pull Images"
 echo "#################################"
 
 docker-compose pull
-docker pull openjdk:8-jre-alpine
+docker pull localhost:5000/openjdk:8-jre-alpine
 
 echo "#################################"
 echo "# Generate Conjur Data Key"
@@ -58,7 +67,7 @@ echo "#################################"
 
 SERVER_IP=${SERVER_IP} \
 GITLAB_ROOT_PASSWORD=${GITLAB_ROOT_PASSWORD} \
-GITLAB_ROOT_EMAIL=${ADMIN_EMAIL} \
+GITLAB_ROOT_EMAIL="mike@cyberarkdemo.com" \
 docker-compose up -d
 
 
@@ -109,6 +118,9 @@ curl -d "script=${theScript}" http://${SERVER_IP}:32080/scriptText
 
 theScript=`cat ./jenkins/security.groovy`
 curl -d "script=${theScript//xPASSx/$JENKINS_ADMIN_PASSWORD}" http://${SERVER_IP}:32080/scriptText
+
+echo "Sleeping for 10 seconds... be right back. :-)"
+sleep 10
 
 docker restart cicd_jenkins
 
