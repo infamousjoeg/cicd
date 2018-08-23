@@ -3,6 +3,11 @@
 ## Purpose
 This repo demostrates how to secure CI/CD pipeline using CyberArk Conjur
 
+## Requirements
+
+* Docker Compose
+* jq
+
 ## Install
 
 run `bin/start.sh`
