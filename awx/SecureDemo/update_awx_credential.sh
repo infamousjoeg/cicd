@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Conjur Tower CLI
-export TOWER_HOST="http://awxweb:8052"
+export TOWER_HOST="http://localhost:8052"
 export TOWER_USERNAME=admin
 export TOWER_VERIFY_SSL=False
 

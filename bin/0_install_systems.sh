@@ -5,7 +5,7 @@
 ####################
 
 
-export SERVER_IP=$(hostname -I | awk '{print $1}')
+export SERVER_IP='localhost'
 export GITLAB_ROOT_PASSWORD=$(openssl rand -hex 12)
 export JENKINS_ADMIN_PASSWORD=$(openssl rand -hex 12)
 export AWX_PASSWORD=$(openssl rand -hex 12)
@@ -69,13 +69,6 @@ SERVER_IP=${SERVER_IP} \
 GITLAB_ROOT_PASSWORD=${GITLAB_ROOT_PASSWORD} \
 GITLAB_ROOT_EMAIL="mike@cyberarkdemo.com" \
 docker-compose up -d
-
-
-echo "#################################"
-echo "# Setup iptables"
-echo "#################################"
-
-ansible-playbook playbook/setup_iptables.yml
 
 
 echo "#################################"
@@ -180,7 +173,7 @@ docker exec cicd_gitlab chmod +x /tmp/getcitoken.rb
 
 
 # Wait for GITLAB web service
-while [[ "$(curl --write-out %{http_code} --silent --output /dev/null http://gitlab.${SERVER_IP}.xip.io:31080/users/sign_in)" != "200" ]]; do 
+while [[ "$(curl --write-out %{http_code} --silent --output /dev/null http://${SERVER_IP}:31080/users/sign_in)" != "200" ]]; do 
     printf '.'
     sleep 5
 done
@@ -190,7 +183,7 @@ until [[ -z "$(docker exec cicd_gitlab ruby /tmp/getcitoken.rb | grep 'Error')" 
 CI_SERVER_TOKEN="$(docker exec cicd_gitlab ruby /tmp/getcitoken.rb)"
 
 docker exec cicd_gitlab_runner gitlab-runner register --non-interactive \
-  --url "http://gitlab.${SERVER_IP}.xip.io:31080/" \
+  --url "http://${SERVER_IP}:31080/" \
   -r "${CI_SERVER_TOKEN}" \
   --executor shell
 
@@ -205,26 +198,26 @@ echo "#################################"
 cat > ./workspace/config << EOL
 SERVER_IP=${SERVER_IP} 
 CONJUR_DATA_KEY=${CONJUR_DATA_KEY}
-CONJUR_URL=conjur.${SERVER_IP}.xip.io:8080
+CONJUR_URL=${SERVER_IP}:8080
 CONJUR_USER=admin
 CONJUR_PASS=${conjur_pass}
 CONJUR_ACCOUNT=${CONJUR_ACCOUNT}
-GITLAB_URL=gitlab.${SERVER_IP}.xip.io:31080
+GITLAB_URL=${SERVER_IP}:31080
 GITLAB_USER=root
 GITLAB_PASS=${GITLAB_ROOT_PASSWORD} 
 GITLAB_EMAIL=${ADMIN_EMAIL} 
 GITLAB_CI_SERVER_TOKEN=${CI_SERVER_TOKEN}
-JENKINS_URL=jenkins.${SERVER_IP}.xip.io:32080
+JENKINS_URL=${SERVER_IP}:32080
 JENKINS_USER=admin
 JENKINS_PASS=${JENKINS_ADMIN_PASSWORD}
-ARTIFACTORY_URL=artifactory.${SERVER_IP}.xip.io:33081
+ARTIFACTORY_URL=${SERVER_IP}:33081
 ARTIFACTORY_USER=admin
 ARTIFACTORY_PASS=password
-SONAR_URL=sonar.${SERVER_IP}.xip.io:34000
+SONAR_URL=${SERVER_IP}:34000
 SONAR_USER=admin
 SONAR_PASS=admin
-SCOPE_URL=scope.${SERVER_IP}.xip.io:4040
-AWX_URL=awx.${SERVER_IP}.xip.io:34080
+SCOPE_URL=${SERVER_IP}:4040
+AWX_URL=${SERVER_IP}:34080
 AWX_USER=admin
 AWX_PASS=${AWX_PASSWORD}
 DOCKER_SSH_USER=cicd_service_account
